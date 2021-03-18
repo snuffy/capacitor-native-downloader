@@ -5,6 +5,7 @@ export interface IAddDownloadRequest {
   size: number;
   filePath: string;
   fileName: string;
+  displayName: string; // 通知時に表示する名前
   headers?: {
     authorization: string;
   };
@@ -26,30 +27,30 @@ export interface IStartDownloadResponse {
 }
 
 // 一時停止
-export interface IPauseRequest {
+export interface IPauseDownloadRequest {
   id: string;
 }
-export interface IPauseResponse {
+export interface IPauseDownloadResponse {
   id: string;
   filename: string;
   absolutePath: string;
 }
 
 // 再開
-export interface IResumeRequest {
+export interface IResumeDownloadRequest {
   id: string;
 }
-export interface IResumeResponse {
+export interface IResumeDownloadResponse {
   id: string;
   filename: string;
   absolutePath: string;
 }
 
-// ストップ
-export interface IStopRequest {
+// キャンセル
+export interface ICancelDownloadRequest {
   id: string;
 }
-export interface IStopResponse {
+export interface ICancelDownloadResponse {
   id: string;
   filename: string;
   absolutePath: string;
@@ -61,4 +62,16 @@ export interface NativeDownloaderPlugin {
   start(options: {
     params: IStartDownloadRequest;
   }): Promise<IStartDownloadResponse>;
+
+  pause(options: {
+    params: IPauseDownloadRequest;
+  }): Promise<IPauseDownloadResponse>;
+
+  resume(options: {
+    params: IResumeDownloadRequest;
+  }): Promise<IResumeDownloadResponse>;
+
+  cancel(options: {
+    params: ICancelDownloadRequest;
+  }): Promise<ICancelDownloadResponse>;
 }

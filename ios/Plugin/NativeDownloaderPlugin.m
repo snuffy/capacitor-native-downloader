@@ -7,4 +7,7 @@ CAP_PLUGIN(NativeDownloaderPlugin, "NativeDownloader",
            CAP_PLUGIN_METHOD(echo, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(add, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(start, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(pause, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(resume, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(cancel, CAPPluginReturnPromise);
 )

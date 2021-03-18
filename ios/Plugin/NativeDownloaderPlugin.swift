@@ -8,6 +8,7 @@ struct NativeDownloadParam {
     var size: Int?
     var filePath: String?
     var fileName: String?
+    var displayName: String?
     
     init(call: CAPPluginCall) {
         
@@ -24,6 +25,9 @@ struct NativeDownloadParam {
         }
         if let param = params["size"] as? Int {
             size = param
+        }
+        if let param = params["displayName"] as? String {
+            displayName = param
         }
         if let param = params["filePath"] as? String {
             filePath = param
@@ -58,6 +62,7 @@ public class NativeDownloaderPlugin: CAPPlugin {
             let headers = param.headers,
             let size = param.size,
             let filePath = param.filePath,
+            let displayName = param.displayName,
             let fileName = param.fileName else {
                 call.reject("invalid arguments")
                 return
@@ -88,7 +93,7 @@ public class NativeDownloaderPlugin: CAPPlugin {
                "fileUrl": fileURL.absoluteString,
             ]
             self.notifyListeners("onComplete", data: result, retainUntilConsumed: true)
-            NativeDownloadNotification.send(title: "", body: "\(fileName) のダウンロードが完了しました", badge: 0)
+            NativeDownloadNotification.send(title: "", body: "\(displayName) のダウンロードが完了しました", badge: 0)
         }
         task.onFailed = { [weak self] message in
             guard let self = self else { return }
@@ -113,6 +118,48 @@ public class NativeDownloaderPlugin: CAPPlugin {
         }
         
         client.start(id: id)
+        let result = ["id": id]
+        call.resolve(result)
+
+    }
+
+    // pause
+    @objc func pause(_ call: CAPPluginCall) {
+        let param = NativeDownloadParam(call: call)
+        guard let id = param.id else {
+            call.reject("invalid arguments")
+            return
+        }
+        
+        client.pause(id: id)
+        let result = ["id": id]
+        call.resolve(result)
+
+    }
+
+    // resume
+    @objc func resume(_ call: CAPPluginCall) {
+        let param = NativeDownloadParam(call: call)
+        guard let id = param.id else {
+            call.reject("invalid arguments")
+            return
+        }
+        
+        client.resume(id: id)
+        let result = ["id": id]
+        call.resolve(result)
+
+    }
+
+    // cancel
+    @objc func cancel(_ call: CAPPluginCall) {
+        let param = NativeDownloadParam(call: call)
+        guard let id = param.id else {
+            call.reject("invalid arguments")
+            return
+        }
+        
+        client.cancel(id: id)
         let result = ["id": id]
         call.resolve(result)
 

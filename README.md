@@ -16,6 +16,9 @@ npx cap sync
 * [`echo(...)`](#echo)
 * [`add(...)`](#add)
 * [`start(...)`](#start)
+* [`pause(...)`](#pause)
+* [`resume(...)`](#resume)
+* [`cancel(...)`](#cancel)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -68,19 +71,65 @@ start(options: { params: IStartDownloadRequest; }) => any
 --------------------
 
 
+### pause(...)
+
+```typescript
+pause(options: { params: IPauseDownloadRequest; }) => any
+```
+
+| Param         | Type                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ params: <a href="#ipausedownloadrequest">IPauseDownloadRequest</a>; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### resume(...)
+
+```typescript
+resume(options: { params: IResumeDownloadRequest; }) => any
+```
+
+| Param         | Type                                                                                   |
+| ------------- | -------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ params: <a href="#iresumedownloadrequest">IResumeDownloadRequest</a>; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### cancel(...)
+
+```typescript
+cancel(options: { params: ICancelDownloadRequest; }) => any
+```
+
+| Param         | Type                                                                                   |
+| ------------- | -------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ params: <a href="#icanceldownloadrequest">ICancelDownloadRequest</a>; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
 ### Interfaces
 
 
 #### IAddDownloadRequest
 
-| Prop           | Type                                    |
-| -------------- | --------------------------------------- |
-| **`id`**       | <code>string</code>                     |
-| **`url`**      | <code>string</code>                     |
-| **`size`**     | <code>number</code>                     |
-| **`filePath`** | <code>string</code>                     |
-| **`fileName`** | <code>string</code>                     |
-| **`headers`**  | <code>{ authorization: string; }</code> |
+| Prop              | Type                                    |
+| ----------------- | --------------------------------------- |
+| **`id`**          | <code>string</code>                     |
+| **`url`**         | <code>string</code>                     |
+| **`size`**        | <code>number</code>                     |
+| **`filePath`**    | <code>string</code>                     |
+| **`fileName`**    | <code>string</code>                     |
+| **`displayName`** | <code>string</code>                     |
+| **`headers`**     | <code>{ authorization: string; }</code> |
 
 
 #### IAddDownloadResponse
@@ -100,6 +149,54 @@ start(options: { params: IStartDownloadRequest; }) => any
 
 
 #### IStartDownloadResponse
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`id`**           | <code>string</code> |
+| **`filename`**     | <code>string</code> |
+| **`absolutePath`** | <code>string</code> |
+
+
+#### IPauseDownloadRequest
+
+| Prop     | Type                |
+| -------- | ------------------- |
+| **`id`** | <code>string</code> |
+
+
+#### IPauseDownloadResponse
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`id`**           | <code>string</code> |
+| **`filename`**     | <code>string</code> |
+| **`absolutePath`** | <code>string</code> |
+
+
+#### IResumeDownloadRequest
+
+| Prop     | Type                |
+| -------- | ------------------- |
+| **`id`** | <code>string</code> |
+
+
+#### IResumeDownloadResponse
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`id`**           | <code>string</code> |
+| **`filename`**     | <code>string</code> |
+| **`absolutePath`** | <code>string</code> |
+
+
+#### ICancelDownloadRequest
+
+| Prop     | Type                |
+| -------- | ------------------- |
+| **`id`** | <code>string</code> |
+
+
+#### ICancelDownloadResponse
 
 | Prop               | Type                |
 | ------------------ | ------------------- |
