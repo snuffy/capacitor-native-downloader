@@ -11,9 +11,100 @@ npx cap sync
 
 ## API
 
-<docgen-index></docgen-index>
+<docgen-index>
+
+* [`echo(...)`](#echo)
+* [`add(...)`](#add)
+* [`start(...)`](#start)
+* [Interfaces](#interfaces)
+
+</docgen-index>
 
 <docgen-api>
-<!-- run docgen to generate docs from the source -->
-<!-- More info: https://github.com/ionic-team/capacitor-docgen -->
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### echo(...)
+
+```typescript
+echo(options: { value: string; }) => any
+```
+
+| Param         | Type                            |
+| ------------- | ------------------------------- |
+| **`options`** | <code>{ value: string; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### add(...)
+
+```typescript
+add(options: { params: IAddDownloadRequest; }) => any
+```
+
+| Param         | Type                                                                             |
+| ------------- | -------------------------------------------------------------------------------- |
+| **`options`** | <code>{ params: <a href="#iadddownloadrequest">IAddDownloadRequest</a>; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### start(...)
+
+```typescript
+start(options: { params: IStartDownloadRequest; }) => any
+```
+
+| Param         | Type                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------ |
+| **`options`** | <code>{ params: <a href="#istartdownloadrequest">IStartDownloadRequest</a>; }</code> |
+
+**Returns:** <code>any</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### IAddDownloadRequest
+
+| Prop           | Type                                    |
+| -------------- | --------------------------------------- |
+| **`id`**       | <code>string</code>                     |
+| **`url`**      | <code>string</code>                     |
+| **`size`**     | <code>number</code>                     |
+| **`filePath`** | <code>string</code>                     |
+| **`fileName`** | <code>string</code>                     |
+| **`headers`**  | <code>{ authorization: string; }</code> |
+
+
+#### IAddDownloadResponse
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`id`**           | <code>string</code> |
+| **`fileName`**     | <code>string</code> |
+| **`absolutePath`** | <code>string</code> |
+
+
+#### IStartDownloadRequest
+
+| Prop     | Type                |
+| -------- | ------------------- |
+| **`id`** | <code>string</code> |
+
+
+#### IStartDownloadResponse
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`id`**           | <code>string</code> |
+| **`filename`**     | <code>string</code> |
+| **`absolutePath`** | <code>string</code> |
+
 </docgen-api>
