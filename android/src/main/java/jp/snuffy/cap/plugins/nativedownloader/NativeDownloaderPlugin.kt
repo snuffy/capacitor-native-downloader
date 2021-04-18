@@ -1,6 +1,4 @@
-package jp.snuffy.capacitor
-
-import com.getcapacitor.annotation.CapacitorPlugin
+package jp.snuffy.cap.plugins.nativedownloader
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -21,7 +19,7 @@ import org.json.JSONObject
 import java.util.jar.Manifest
 
 
-@CapacitorPlugin(name = "NativeDownloader")
+@NativePlugin(name = "NativeDownloader")
 class NativeDownloaderPlugin : Plugin() {
     private val implementation: NativeDownloader = NativeDownloader()
     private lateinit var fetch: Fetch

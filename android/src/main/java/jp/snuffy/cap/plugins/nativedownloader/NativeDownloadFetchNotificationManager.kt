@@ -1,4 +1,4 @@
-package jp.snuffy.capacitor
+package jp.snuffy.cap.plugins.nativedownloader
 
 
 import android.annotation.SuppressLint

@@ -75,3 +75,9 @@ export interface NativeDownloaderPlugin {
     params: ICancelDownloadRequest;
   }): Promise<ICancelDownloadResponse>;
 }
+
+declare module '@capacitor/core' {
+  interface PluginRegistry {
+    NativeDownloaderPlugin: NativeDownloaderPlugin;
+  }
+}

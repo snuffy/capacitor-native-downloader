@@ -1,4 +1,4 @@
-package jp.snuffy.capacitor
+package jp.snuffy.cap.plugins.nativedownloader
 
 import com.google.gson.annotations.SerializedName
 import com.tonyodev.fetch2.Request
