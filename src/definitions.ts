@@ -1,3 +1,5 @@
+import type { Plugin } from "@capacitor/core";
+
 // ダウンロードの追加
 export interface IAddDownloadRequest {
   id: string;
@@ -56,7 +58,7 @@ export interface ICancelDownloadResponse {
   absolutePath: string;
 }
 
-export interface NativeDownloaderPlugin {
+export interface NativeDownloaderPlugin extends Plugin {
   echo(options: { value: string }): Promise<{ value: string }>;
   add(options: { params: IAddDownloadRequest }): Promise<IAddDownloadResponse>;
   start(options: {
@@ -75,6 +77,8 @@ export interface NativeDownloaderPlugin {
     params: ICancelDownloadRequest;
   }): Promise<ICancelDownloadResponse>;
 }
+
+
 
 declare module '@capacitor/core' {
   interface PluginRegistry {
