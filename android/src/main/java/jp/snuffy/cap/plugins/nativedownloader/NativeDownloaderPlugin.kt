@@ -1,25 +1,28 @@
 package jp.snuffy.cap.plugins.nativedownloader
 
+import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
+import android.content.pm.PackageManager
 import android.os.Environment
 import android.os.StatFs
 import android.util.Log
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.getcapacitor.*
+import com.getcapacitor.annotation.CapacitorPlugin
+import com.getcapacitor.annotation.Permission
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tonyodev.fetch2.*
 import com.tonyodev.fetch2core.DownloadBlock
-import com.tonyodev.fetch2core.Downloader
 import com.tonyodev.fetch2core.Func
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import java.util.jar.Manifest
+import java.io.File
 
 
-@NativePlugin(name = "NativeDownloader")
+@CapacitorPlugin(
+        name = "NativeDownloader",
+)
 class NativeDownloaderPlugin : Plugin() {
     private val implementation: NativeDownloader = NativeDownloader()
     private lateinit var fetch: Fetch
@@ -40,9 +43,8 @@ class NativeDownloaderPlugin : Plugin() {
         super.load()
 
         val fetchConfiguration = FetchConfiguration.Builder(activity)
-                .setNamespace("")
+                .enableLogging(true)
                 .setDownloadConcurrentLimit(1)
-                .setHttpDownloader(HttpUrlConnectionDownloader(Downloader.FileDownloaderType.SEQUENTIAL))
                 .setNotificationManager(object : NativeDownloadFetchNotificationManager(activity) {
                     override fun getFetchInstanceForNamespace(namespace: String): Fetch {
                         return fetch
@@ -73,11 +75,20 @@ class NativeDownloaderPlugin : Plugin() {
         val index = System.currentTimeMillis()
         params.put("index", index)
         params.put("filePath", path.removePrefix("file://"))
+
         val task = Gson().fromJson(params.toString(), NativeDownloadTask::class.java)
 
+        println("=================================")
+        println(task.id)
+        println("=================================")
+        val newDir: File = File(context.getExternalFilesDir(null), path)
+        if (!newDir.exists()) {
+            newDir.mkdir()
+        }
+
+
         // MEMO: debug時は getFilePathを利用する
-        // task.request = Request(task.url, getFilePath(task.url))
-        task.request = Request(task.url, task.filePath)
+        task.request = Request(task.url, newDir.path + "/" + task.fileName)
         task.request?.apply {
             priority = Priority.HIGH
             networkType = NetworkType.ALL
@@ -113,6 +124,7 @@ class NativeDownloaderPlugin : Plugin() {
         val output = Gson().toJson(task)
         val result = JSObject(output)
         val status:List<Status> = mutableListOf(Status.DOWNLOADING, Status.QUEUED, Status.ADDED)
+
         fetch.getDownloadsWithStatus(status, Func<List<Download>> { result ->
             if (result.isEmpty()) {
                 val tasks = getTasks()
@@ -120,11 +132,17 @@ class NativeDownloaderPlugin : Plugin() {
                     val requests = tasks.toSortedMap(Comparator { k1, k2 -> if (tasks[k1]!!.index > tasks[k2]!!.index)  1 else -1 })
                             .map { it.value.request } as MutableList<Request?>
 
-                    fetch.enqueue(requests.filterNotNull())
+                    fetch.enqueue(requests.filterNotNull()) { (result) ->
+
+                            println(result)
+
+
+                    };
 
                 }
             }
         })
+
 
         call.resolve(result)
     }
@@ -211,6 +229,18 @@ class NativeDownloaderPlugin : Plugin() {
         // ダウンロード完了
         override fun onCompleted(download: Download) {
             Log.d(TAG, "Completed Download: ${download.url}")
+            val currentTask = getTasks().filter { it -> it.value.request?.id == download.request.id } as MutableMap<String, NativeDownloadTask>
+            val task = currentTask.get(currentTask.keys.first())
+            if (task != null) {
+                val result = JSObject()
+                result.put("id", task.id)
+                result.put("fileUrl", download.fileUri)
+                println("============================")
+                println(download.url)
+                println(download.fileUri)
+                println("============================")
+                notifyListeners("onComplete", result, true)
+            }
 
             // MEMO: download が完了したら tasks から消す
             val restTask = getTasks().filter { it -> it.value.request?.id != download.request.id } as MutableMap<String, NativeDownloadTask>
@@ -230,19 +260,19 @@ class NativeDownloaderPlugin : Plugin() {
                 }
 
             })
-            val result = JSObject()
-            result.put("id", download.id)
-            result.put("fileUrl", download.url)
-            notifyListeners("onComplete", result)
+
         }
 
         override fun onDeleted(download: Download) {
             Log.d(TAG, "Deleted Download: ${download.url}")
-
-            val result = JSObject()
-            result.put("id", download.id)
-            result.put("status", download.status.toString())
-            notifyListeners("onChangeStatus", result)
+            val tasks = getTasks()
+            val task = tasks.get(tasks.keys.first())
+            if (task != null) {
+                val result = JSObject()
+                result.put("id", task.id)
+                result.put("status", download.status.toString())
+                notifyListeners("onChangeStatus", result)
+            }
 
         }
 
@@ -252,28 +282,43 @@ class NativeDownloaderPlugin : Plugin() {
 
         override fun onError(download: Download, error: Error, throwable: Throwable?) {
             Log.d(TAG, "Error Download: ${download.error}")
-
-            val result = JSObject()
-            result.put("id", download.id)
-            result.put("status", download.error.toString())
-            notifyListeners("onFailed", result)
+            val tasks = getTasks()
+            val task = tasks.get(tasks.keys.first())
+            if (task != null) {
+                val result = JSObject()
+                result.put("id", task.id)
+                result.put("status", download.error.toString())
+                notifyListeners("onFailed", result)
+            }
         }
 
         override fun onPaused(download: Download) {
             Log.d(TAG, "Paused Download: ${download.url}")
-
-            val result = JSObject()
-            result.put("id", download.id)
-            result.put("status", download.status.toString())
-            notifyListeners("onChangeStatus", result)
+            val tasks = getTasks()
+            val task = tasks.get(tasks.keys.first())
+            if (task != null) {
+                val result = JSObject()
+                result.put("id", task.id)
+                result.put("status", download.status.toString())
+                notifyListeners("onChangeStatus", result)
+            }
         }
 
         override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
             Log.d(TAG, "Progress Download: ${download.progress}")
             val result = JSObject()
-            result.put("id", download.id)
-            result.put("progress", download.progress/100.0)
-            notifyListeners("onProgress", result);
+            val restTask = getTasks().filter { it -> it.value.request?.id == download.request.id } as MutableMap<String, NativeDownloadTask>
+            val task = restTask.get(restTask.keys.first())
+            println("===================")
+            println(task)
+            println("===================")
+            if (task != null) {
+                result.put("id", task.id)
+                result.put("progress", download.progress/100.0)
+                println(download.id)
+                notifyListeners("onProgress", result, true);
+            }
+
         }
 
         override fun onQueued(download: Download, waitingOnNetwork: Boolean) {
