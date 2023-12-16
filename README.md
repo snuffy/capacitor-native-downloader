@@ -29,14 +29,14 @@ npx cap sync
 ### echo(...)
 
 ```typescript
-echo(options: { value: string; }) => any
+echo(options: { value: string; }) => Promise<{ value: string; }>
 ```
 
 | Param         | Type                            |
 | ------------- | ------------------------------- |
 | **`options`** | <code>{ value: string; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
 
@@ -44,14 +44,14 @@ echo(options: { value: string; }) => any
 ### add(...)
 
 ```typescript
-add(options: { params: IAddDownloadRequest; }) => any
+add(options: { params: IAddDownloadRequest; }) => Promise<IAddDownloadResponse>
 ```
 
 | Param         | Type                                                                             |
 | ------------- | -------------------------------------------------------------------------------- |
 | **`options`** | <code>{ params: <a href="#iadddownloadrequest">IAddDownloadRequest</a>; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#iadddownloadresponse">IAddDownloadResponse</a>&gt;</code>
 
 --------------------
 
@@ -59,14 +59,14 @@ add(options: { params: IAddDownloadRequest; }) => any
 ### start(...)
 
 ```typescript
-start(options: { params: IStartDownloadRequest; }) => any
+start(options: { params: IStartDownloadRequest; }) => Promise<IStartDownloadResponse>
 ```
 
 | Param         | Type                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------ |
 | **`options`** | <code>{ params: <a href="#istartdownloadrequest">IStartDownloadRequest</a>; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#istartdownloadresponse">IStartDownloadResponse</a>&gt;</code>
 
 --------------------
 
@@ -74,14 +74,14 @@ start(options: { params: IStartDownloadRequest; }) => any
 ### pause(...)
 
 ```typescript
-pause(options: { params: IPauseDownloadRequest; }) => any
+pause(options: { params: IPauseDownloadRequest; }) => Promise<IPauseDownloadResponse>
 ```
 
 | Param         | Type                                                                                 |
 | ------------- | ------------------------------------------------------------------------------------ |
 | **`options`** | <code>{ params: <a href="#ipausedownloadrequest">IPauseDownloadRequest</a>; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#ipausedownloadresponse">IPauseDownloadResponse</a>&gt;</code>
 
 --------------------
 
@@ -89,14 +89,14 @@ pause(options: { params: IPauseDownloadRequest; }) => any
 ### resume(...)
 
 ```typescript
-resume(options: { params: IResumeDownloadRequest; }) => any
+resume(options: { params: IResumeDownloadRequest; }) => Promise<IResumeDownloadResponse>
 ```
 
 | Param         | Type                                                                                   |
 | ------------- | -------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ params: <a href="#iresumedownloadrequest">IResumeDownloadRequest</a>; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#iresumedownloadresponse">IResumeDownloadResponse</a>&gt;</code>
 
 --------------------
 
@@ -104,19 +104,28 @@ resume(options: { params: IResumeDownloadRequest; }) => any
 ### cancel(...)
 
 ```typescript
-cancel(options: { params: ICancelDownloadRequest; }) => any
+cancel(options: { params: ICancelDownloadRequest; }) => Promise<ICancelDownloadResponse>
 ```
 
 | Param         | Type                                                                                   |
 | ------------- | -------------------------------------------------------------------------------------- |
 | **`options`** | <code>{ params: <a href="#icanceldownloadrequest">ICancelDownloadRequest</a>; }</code> |
 
-**Returns:** <code>any</code>
+**Returns:** <code>Promise&lt;<a href="#icanceldownloadresponse">ICancelDownloadResponse</a>&gt;</code>
 
 --------------------
 
 
 ### Interfaces
+
+
+#### IAddDownloadResponse
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`id`**           | <code>string</code> |
+| **`fileName`**     | <code>string</code> |
+| **`absolutePath`** | <code>string</code> |
 
 
 #### IAddDownloadRequest
@@ -132,22 +141,6 @@ cancel(options: { params: ICancelDownloadRequest; }) => any
 | **`headers`**     | <code>{ authorization: string; }</code> |
 
 
-#### IAddDownloadResponse
-
-| Prop               | Type                |
-| ------------------ | ------------------- |
-| **`id`**           | <code>string</code> |
-| **`fileName`**     | <code>string</code> |
-| **`absolutePath`** | <code>string</code> |
-
-
-#### IStartDownloadRequest
-
-| Prop     | Type                |
-| -------- | ------------------- |
-| **`id`** | <code>string</code> |
-
-
 #### IStartDownloadResponse
 
 | Prop               | Type                |
@@ -157,7 +150,7 @@ cancel(options: { params: ICancelDownloadRequest; }) => any
 | **`absolutePath`** | <code>string</code> |
 
 
-#### IPauseDownloadRequest
+#### IStartDownloadRequest
 
 | Prop     | Type                |
 | -------- | ------------------- |
@@ -173,7 +166,7 @@ cancel(options: { params: ICancelDownloadRequest; }) => any
 | **`absolutePath`** | <code>string</code> |
 
 
-#### IResumeDownloadRequest
+#### IPauseDownloadRequest
 
 | Prop     | Type                |
 | -------- | ------------------- |
@@ -189,7 +182,7 @@ cancel(options: { params: ICancelDownloadRequest; }) => any
 | **`absolutePath`** | <code>string</code> |
 
 
-#### ICancelDownloadRequest
+#### IResumeDownloadRequest
 
 | Prop     | Type                |
 | -------- | ------------------- |
@@ -203,5 +196,12 @@ cancel(options: { params: ICancelDownloadRequest; }) => any
 | **`id`**           | <code>string</code> |
 | **`filename`**     | <code>string</code> |
 | **`absolutePath`** | <code>string</code> |
+
+
+#### ICancelDownloadRequest
+
+| Prop     | Type                |
+| -------- | ------------------- |
+| **`id`** | <code>string</code> |
 
 </docgen-api>
