@@ -101,7 +101,7 @@ abstract class NativeDownloadFetchNotificationManager(context: Context) : FetchN
         }
         notificationBuilder.setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                .setContentTitle(context.getString(R.string.fetch_notification_default_channel_name))
+                .setContentTitle(context.getString(com.tonyodev.fetchmigrator.R.string.fetch_notification_default_channel_name))
                 .setContentText("")
                 .setStyle(style)
                 .setGroup(groupId.toString())
@@ -190,7 +190,7 @@ abstract class NativeDownloadFetchNotificationManager(context: Context) : FetchN
                 else -> ACTION_TYPE_INVALID
             }
             intent.putExtra(EXTRA_ACTION_TYPE, action)
-            return PendingIntent.getBroadcast(context, downloadNotification.notificationId + action, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(context, downloadNotification.notificationId + action, intent, PendingIntent.FLAG_MUTABLE)
         }
     }
 
@@ -211,7 +211,7 @@ abstract class NativeDownloadFetchNotificationManager(context: Context) : FetchN
                 else -> ACTION_TYPE_INVALID
             }
             intent.putExtra(EXTRA_ACTION_TYPE, action)
-            return PendingIntent.getBroadcast(context, groupId + action, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            return PendingIntent.getBroadcast(context, groupId + action, intent, PendingIntent.FLAG_MUTABLE)
         }
     }
 
@@ -347,11 +347,11 @@ abstract class NativeDownloadFetchNotificationManager(context: Context) : FetchN
 
     override fun getSubtitleText(context: Context, downloadNotification: DownloadNotification): String {
         return when {
-            downloadNotification.isCompleted -> context.getString(R.string.fetch_notification_download_complete)
-            downloadNotification.isFailed -> context.getString(R.string.fetch_notification_download_failed)
-            downloadNotification.isPaused -> context.getString(R.string.fetch_notification_download_paused)
-            downloadNotification.isQueued -> context.getString(R.string.fetch_notification_download_starting)
-            downloadNotification.etaInMilliSeconds < 0 -> context.getString(R.string.fetch_notification_download_downloading)
+            downloadNotification.isCompleted -> context.getString(com.tonyodev.fetch2.R.string.fetch_notification_download_complete)
+            downloadNotification.isFailed -> context.getString(com.tonyodev.fetch2.R.string.fetch_notification_download_failed)
+            downloadNotification.isPaused -> context.getString(com.tonyodev.fetch2.R.string.fetch_notification_download_failed)
+            downloadNotification.isQueued -> context.getString(com.tonyodev.fetch2.R.string.fetch_notification_download_starting)
+            downloadNotification.etaInMilliSeconds < 0 -> context.getString(com.tonyodev.fetch2.R.string.fetch_notification_download_downloading)
             else -> getEtaText(context, downloadNotification.etaInMilliSeconds)
         }
     }
