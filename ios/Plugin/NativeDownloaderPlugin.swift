@@ -12,7 +12,7 @@ struct NativeDownloadParam {
     
     init(call: CAPPluginCall) {
         
-        guard let params = call.get("params",[String:Any].self) else { return }
+        guard let params = call.getObject("params") else { return }
     
         if let param = params["id"] as? String {
             id = param
